@@ -1,15 +1,15 @@
 var ghp_get = function( owner, repo, callback, modifier )
 {
-  ghp_get.options = {
-    "labels" : "blogpost",
-    "state" : "all"
-  }
-  
-  function generate_query( options, modifier ){
+  function generate_query( modifier ){
     
-    var result = "", result_length = 0;
+    var result = "", result_length = 0, options;
+    if( arguments.length > 0 ){
     
-    if( arguments.length > 1 ){
+      options = {};
+      for (var property in ghp_get.options) {
+        options[ property ] = ghp_get.options[ property ]
+      }
+      
       for (var property in modifier) { 
         if ( modifier.hasOwnProperty( property ) ){
           if ( modifier[ property ].hasOwnProperty( "val" ) ){
@@ -26,8 +26,12 @@ var ghp_get = function( owner, repo, callback, modifier )
           }
         }
       }
+    }else{
+      options = ghp_get.options
     }
-    console.log(options);
+    
+    console.log( options );
+    
     for (var property in options) {
       if (options.hasOwnProperty(property)) {
         if (typeof options[ property ] === 'string' || options[ property ] instanceof String){
@@ -46,6 +50,11 @@ var ghp_get = function( owner, repo, callback, modifier )
       callback( this.responseText );
     }
   };
-  HTTP_req.open( "GET", "https://api.github.com/repos/" + owner + "/" + repo + "/issues" + generate_query( ghp_get.options, modifier ), true );
+  HTTP_req.open( "GET", "https://api.github.com/repos/" + owner + "/" + repo + "/issues" + generate_query( modifier ), true );
   HTTP_req.send();
+}
+
+ghp_get.options = {
+  "labels" : "testing",
+  "state" : "all"
 }
