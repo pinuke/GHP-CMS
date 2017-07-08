@@ -1,7 +1,8 @@
 var ghp_get = function( owner, repo, callback, modifier )
 {
   ghp_get.options = {
-    "labels" : "blogpost"
+    "labels" : "blogpost",
+    "state" : "all"
   }
   
   function generate_query( options, modifier ){
@@ -16,7 +17,7 @@ var ghp_get = function( owner, repo, callback, modifier )
               options[ property ] = ( modifier[ property ].hasOwnProperty( "o_w" ) ? modifier[ property ].o_w : false ) ? modifier[ property ].val : ( options.hasOwnProperty( property ) ? options[ property ] + "," + modifier[ property ].val : modifier[ property ].val );
             }else if( modifier[ property ].val.constructor === Array ){
               if ( modifier[ property ].hasOwnProperty( "o_w" ) ? modifier[ property ].o_w : false || !options.hasOwnProperty( property ) ) options[ property ] = "";
-              for (var i = 0; i < modifier[ property ].val.length < ; i++) options[ property ] = options[ property ] + modifier[ property ].val[ i ] + ( i !== modifier[ property ].val.length - 1 ? "," : "" );
+              for (var i = 0; i < modifier[ property ].val.length; i++) options[ property ] = options[ property ] + modifier[ property ].val[ i ] + ( i !== modifier[ property ].val.length - 1 ? "," : "" );
             }else{
               console.log( "Invalid object passed as an option in the modifier argument.")
             }
@@ -26,7 +27,7 @@ var ghp_get = function( owner, repo, callback, modifier )
         }
       }
     }
-    
+    console.log(options);
     for (var property in options) {
       if (options.hasOwnProperty(property)) {
         if (typeof options[ property ] === 'string' || options[ property ] instanceof String){
@@ -45,6 +46,6 @@ var ghp_get = function( owner, repo, callback, modifier )
       callback( this.responseText );
     }
   };
-  HTTP_req.open( "GET", "https://api.github.com/repos/" + owner + "/" + repo + "/issues" + generate_query( options, modifier ), true );
+  HTTP_req.open( "GET", "https://api.github.com/repos/" + owner + "/" + repo + "/issues" + generate_query( ghp_get.options, modifier ), true );
   HTTP_req.send();
 }
